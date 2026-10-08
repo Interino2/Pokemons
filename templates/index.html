@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f7f8fc">
+    <title>Pokédex | Tu aventura Pokémon</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script type="module" src="https://cdn.jsdelivr.net/gh/starfederation/datastar@main/bundles/datastar.js"></script>
+</head>
+<body>
+    <main class="page-shell">
+        <header class="topbar">
+            <a class="brand" href="/" aria-label="Pokédex, inicio">
+                <span class="brand-mark" aria-hidden="true"><span></span></span>
+                <span>POKÉDEX</span>
+            </a>
+            <span class="topbar-note">Tu guía de aventuras</span>
+        </header>
+
+        <section class="hero" aria-labelledby="page-title">
+            <div class="hero-copy">
+                <span class="eyebrow"><span class="eyebrow-dot"></span> BIENVENIDO, ENTRENADOR</span>
+                <h1 id="page-title">Descubre tu próximo <span>Pokémon.</span></h1>
+                <p>Explora la colección, conoce sus características y encuentra a tu nuevo compañero de aventura.</p>
+                <a class="hero-link" href="#coleccion">Explorar colección <span aria-hidden="true">↓</span></a>
+            </div>
+            <div class="hero-art" aria-hidden="true">
+                <div class="orbit orbit-one"></div>
+                <div class="orbit orbit-two"></div>
+                <div class="hero-ball"><span></span></div>
+                <span class="spark spark-one">✦</span>
+                <span class="spark spark-two">✦</span>
+            </div>
+            <div class="hero-count">
+                <strong>{{ len .Pokemons }}</strong>
+                <span>Pokémon en la colección</span>
+            </div>
+        </section>
+
+        <section class="collection-section" id="coleccion" aria-labelledby="collection-title">
+            <div class="section-heading">
+                <div>
+                    <span class="section-kicker">TU ENCICLOPEDIA</span>
+                    <h2 id="collection-title">La colección</h2>
+                </div>
+                <span class="collection-count">{{ len .Pokemons }} {{ if eq (len .Pokemons) 1 }}Pokémon registrado{{ else }}Pokémon registrados{{ end }}</span>
+            </div>
+
+            <div class="collection-layout">
+                <div class="pokemon-grid">
+                    {{ range .Pokemons }}
+                    <button class="pokemon-tile" type="button" data-on:click="@get('/pokemon/{{ .ID }}')" aria-label="Ver información de {{ .Nombre }}">
+                        <span class="tile-number">N.º {{ printf "%03d" .ID }}</span>
+                        <span class="tile-art">
+                            {{ if .Imagen }}
+                            <img src="{{ .Imagen }}" alt="" loading="lazy">
+                            {{ else }}
+                            <span class="image-placeholder" aria-hidden="true">?</span>
+                            {{ end }}
+                        </span>
+                        <span class="tile-name">{{ .Nombre }}</span>
+                        <span class="tile-type">{{ .Tipo }}</span>
+                    </button>
+                    {{ else }}
+                    <div class="empty-collection">
+                        <span class="empty-icon" aria-hidden="true">✦</span>
+                        <h3>Tu colección está esperando</h3>
+                        <p>Cuando agregues Pokémon a la base de datos aparecerán aquí.</p>
+                    </div>
+                    {{ end }}
+                </div>
+
+                <aside class="detail-panel" aria-label="Detalles del Pokémon seleccionado">
+                    {{ template "pokemon-placeholder" . }}
+                </aside>
+            </div>
+        </section>
+        <footer class="footer">Hecho para entrenadores curiosos <span aria-hidden="true">✦</span></footer>
+    </main>
+</body>
+</html>
+
+{{ define "pokemon-placeholder" }}
+<div id="pokemon-info" class="pokemon-info">
+    <div class="detail-placeholder">
+        <span class="placeholder-ball" aria-hidden="true"><span></span></span>
+        <span class="section-kicker">FICHA POKÉMON</span>
+        <h2>¿Quién será tu compañero?</h2>
+        <p>Selecciona un Pokémon de la colección para descubrir todos sus detalles.</p>
+    </div>
+</div>
+{{ end }}
+
+{{ define "pokemon-detail" }}
+<div id="pokemon-info" class="pokemon-info pokemon-info-filled">
+    <div class="detail-image">
+        {{ if .Imagen }}
+        <img src="{{ .Imagen }}" alt="Ilustración de {{ .Nombre }}">
+        {{ else }}
+        <span class="image-placeholder" aria-hidden="true">?</span>
+        {{ end }}
+        <span class="detail-number">N.º {{ printf "%03d" .ID }}</span>
+    </div>
+    <div class="detail-copy">
+        <span class="section-kicker">FICHA POKÉMON</span>
+        <h2>{{ .Nombre }}</h2>
+        <span class="type-pill">{{ .Tipo }}</span>
+        <p class="pokemon-description">{{ if .Descripcion }}{{ .Descripcion }}{{ else }}Todavía no hay una descripción para este Pokémon.{{ end }}</p>
+        <div class="pokemon-stats">
+            <div class="stat">
+                <span>ALTURA</span>
+                <strong>{{ printf "%.2f" .Altura }} <small>m</small></strong>
+            </div>
+            <div class="stat">
+                <span>PESO</span>
+                <strong>{{ printf "%.2f" .Peso }} <small>kg</small></strong>
+            </div>
+        </div>
+    </div>
+</div>
+{{ end }}

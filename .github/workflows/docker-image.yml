@@ -28,7 +28,9 @@ jobs:
     - name: build docker image
       run: |
         docker build -t chavhd/prueba_betta:0.0.2 .
+        docker build -t chavhd/prueba_betta:latest .
 
     - name: push docker image
       run: |
         docker push chavhd/prueba_betta:0.0.2
+        docker push chavhd/prueba_betta:latest

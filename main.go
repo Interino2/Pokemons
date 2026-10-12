@@ -48,6 +48,7 @@ func main() {
 	)
 
 	mux.HandleFunc("GET /{$}", pokemonHandler.Home)
+	mux.HandleFunc("POST /pokemon", pokemonHandler.CreatePokemon)
 	mux.HandleFunc("GET /pokemon/{id}", pokemonHandler.GetPokemon)
 
 	log.Printf(

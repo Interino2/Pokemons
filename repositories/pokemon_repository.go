@@ -47,7 +47,8 @@ func (r *PokemonRepository) GetAll(ctx context.Context) ([]models.Pokemon, error
     WHEN 'Leafeon' THEN 21
     WHEN 'Glaceon' THEN 22
     WHEN 'Sylveon' THEN 23
-END`,
+    ELSE 1000
+END, id`,
 	)
 
 	if err != nil {
@@ -101,4 +102,19 @@ func (r *PokemonRepository) GetByID(ctx context.Context, id int) (models.Pokemon
 	)
 
 	return pokemon, err
+}
+
+func (r *PokemonRepository) Create(ctx context.Context, pokemon models.Pokemon) error {
+	_, err := r.DB.Exec(
+		ctx,
+		`INSERT INTO pokemons (nombre, tipo, altura, peso, imagen, descripcion)
+		 VALUES ($1, $2, $3, $4, $5, $6)`,
+		pokemon.Nombre,
+		pokemon.Tipo,
+		pokemon.Altura,
+		pokemon.Peso,
+		pokemon.Imagen,
+		pokemon.Descripcion,
+	)
+	return err
 }

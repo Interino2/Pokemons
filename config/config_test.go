@@ -45,3 +45,36 @@ func TestLoadReadsEnvFileWithoutOverridingProcessEnvironment(t *testing.T) {
 		t.Errorf("file configuration not loaded: DBPort=%q DBName=%q AppPort=%q", cfg.DBPort, cfg.DBName, cfg.AppPort)
 	}
 }
+
+func TestLoadUsesDockerComposeDatabaseDefaults(t *testing.T) {
+	keys := []string{"DB_HOST", "DB_PORT", "DB_USER", "DB_PASSWORD", "DB_NAME", "APP_PORT"}
+	previous := make(map[string]string, len(keys))
+	wasSet := make(map[string]bool, len(keys))
+	for _, key := range keys {
+		previous[key], wasSet[key] = os.LookupEnv(key)
+		if err := os.Unsetenv(key); err != nil {
+			t.Fatal(err)
+		}
+	}
+	t.Cleanup(func() {
+		for _, key := range keys {
+			if wasSet[key] {
+				_ = os.Setenv(key, previous[key])
+			} else {
+				_ = os.Unsetenv(key)
+			}
+		}
+	})
+
+	filename := filepath.Join(t.TempDir(), ".env")
+	cfg, err := load(filename)
+	if err != nil {
+		t.Fatalf("load config: %v", err)
+	}
+
+	if cfg.DBHost != "localhost" || cfg.DBPort != "5434" || cfg.DBUser != "postgres" ||
+		cfg.DBPassword != "admin" || cfg.DBName != "pokemon_db" {
+		t.Errorf("unexpected database defaults: host=%q port=%q user=%q password set=%t name=%q",
+			cfg.DBHost, cfg.DBPort, cfg.DBUser, cfg.DBPassword != "", cfg.DBName)
+	}
+}

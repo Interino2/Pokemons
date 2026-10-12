@@ -28,9 +28,9 @@ func load(filename string) (Config, error) {
 
 	return Config{
 		DBHost:     getEnv("DB_HOST", "localhost"),
-		DBPort:     getEnv("DB_PORT", "5432"),
+		DBPort:     getEnv("DB_PORT", "5434"),
 		DBUser:     getEnv("DB_USER", "postgres"),
-		DBPassword: os.Getenv("DB_PASSWORD"),
+		DBPassword: getEnv("DB_PASSWORD", "admin"),
 		DBName:     getEnv("DB_NAME", "pokemon_db"),
 		AppPort:    getEnv("APP_PORT", "8080"),
 	}, nil

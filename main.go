@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"html/template"
 	"log"
 	"net/http"
@@ -11,6 +12,7 @@ import (
 	"pokemon-app/handlers"
 	"pokemon-app/repositories"
 )
+
 //comentario
 func main() {
 
@@ -28,6 +30,9 @@ func main() {
 	defer db.Close()
 
 	pokemonRepository := repositories.NewPokemonRepository(db)
+	if err := pokemonRepository.SeedDefaults(context.Background()); err != nil {
+		log.Fatalf("cargando los Pokémon iniciales: %v", err)
+	}
 
 	tmpl := template.Must(
 		template.ParseFiles("templates/index.html"),

@@ -1,47 +1,65 @@
-name: Docker Image CI
-
+name: Docker CI - Build & Push
+ 
 on:
-  push:
-    branches: [ "main" ]
   pull_request:
-    branches: [ "main" ]
-
+    types: [closed]
+    branches:
+      - main
+    paths:
+      - "**.go"
+      - "go.mod"
+      - "go.sum"
+      - "dockerfile"
+      - "templates/**"
+      - "static/**"
+ 
 jobs:
-
-  build:
-
+  build-and-push:
+    name: Build & Push Docker Image
     runs-on: ubuntu-latest
-
+    if: github.event.pull_request.merged == true
+ 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-      with:
-        fetch-depth: 0
-
-    - name: Git Semantic Version
-      uses: PaulHatch/semantic-version@v6.0.2
-      with:
-        major_pattern: "major:"
-        minor_pattern: "feat:"
-        version_format: "${major}.${minor}.${patch}-prerelease${increment}"
-      id: version
-
-    - name: Docker login
-      env:
-        DOCKER_USER: ${{ secrets.DOCKER_USER }}
-        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-      run: |
-        docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
-
-    - name: Build docker image
-      env:
-        NEW_VERSION: ${{ steps.version.outputs.version }}
-      run: |
-        docker build -t chavhd/prueba_betta:$NEW_VERSION -t chavhd/prueba_betta:latest .
-
-    - name: Push docker image
-      env:
-        NEW_VERSION: ${{ steps.version.outputs.version }}
-      run: |
-        docker push chavhd/prueba_betta:$NEW_VERSION
-        docker push chavhd/prueba_betta:latest
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.merge_commit_sha }}
+ 
+      - name: Calculate semantic version
+        id: version
+        uses: PaulHatch/semantic-version@v6.0.2
+        with:
+          major_pattern: "major:"
+          minor_pattern: "feat:"
+          version_format: "${major}.${minor}.${patch}"
+ 
+      - name: Validate calculated version
+        env:
+          NEW_VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          if [ -z "$NEW_VERSION" ]; then
+            echo "Error: NEW_VERSION salió vacío, abortando antes de construir la imagen."
+            exit 1
+          fi
+          echo "Versión calculada: $NEW_VERSION"
+ 
+      - name: Log in to Docker Hub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USER }}" --password-stdin
+ 
+      - name: Build Docker image
+        env:
+          NEW_VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          docker build \
+            -f dockerfile \
+            -t chavhd/prueba_betta:${NEW_VERSION} \
+            -t chavhd/prueba_betta:latest \
+            .
+ 
+      - name: Push Docker image tags
+        env:
+          NEW_VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          docker push chavhd/prueba_betta:${NEW_VERSION}
+          docker push chavhd/prueba_betta:latest

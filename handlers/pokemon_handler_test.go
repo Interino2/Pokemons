@@ -48,7 +48,7 @@ func newTestHandler(t *testing.T, store PokemonStore) *PokemonHandler {
 func TestHomeRendersPokemonCollection(t *testing.T) {
 	handler := newTestHandler(t, &testPokemonStore{
 		pokemons: []models.Pokemon{
-			{ID: 25, Nombre: "Pikachu", Tipo: "Eléctrico"},
+			{ID: 25, PokedexNumber: 25, Nombre: "Pikachu", Tipo: "Eléctrico"},
 		},
 	})
 	response := httptest.NewRecorder()
@@ -59,7 +59,7 @@ func TestHomeRendersPokemonCollection(t *testing.T) {
 		t.Fatalf("status = %d, want 200", response.Code)
 	}
 	body := response.Body.String()
-	for _, want := range []string{"Pikachu", "Eléctrico", "N.º 025", "Pokémon en la colección"} {
+	for _, want := range []string{"Pikachu", "Eléctrico", "N.º 025", "Pokémon en la colección", "Sortear mi equipo", "seis compañeros distintos"} {
 		if !strings.Contains(body, want) {
 			t.Errorf("response body does not contain %q", want)
 		}

@@ -21,34 +21,9 @@ func NewPokemonRepository(db *pgxpool.Pool) *PokemonRepository {
 func (r *PokemonRepository) GetAll(ctx context.Context) ([]models.Pokemon, error) {
 	rows, err := r.DB.Query(
 		ctx,
-		`SELECT id, nombre, tipo, altura, peso, imagen, descripcion
+		`SELECT id, COALESCE(pokedex_number, id), nombre, tipo, altura, peso, imagen, descripcion
 		 FROM pokemons
-		 ORDER BY CASE nombre
-    WHEN 'Bulbasaur' THEN 1
-    WHEN 'Ivysaur' THEN 2
-    WHEN 'Venusaur' THEN 3
-    WHEN 'Charmander' THEN 4
-    WHEN 'Charmeleon' THEN 5
-    WHEN 'Charizard' THEN 6
-    WHEN 'Squirtle' THEN 7
-    WHEN 'Wartortle' THEN 8
-    WHEN 'Blastoise' THEN 9
-    WHEN 'Pikachu' THEN 10
-    WHEN 'Raichu' THEN 11
-    WHEN 'Gastly' THEN 12
-    WHEN 'Haunter' THEN 13
-    WHEN 'Gengar' THEN 14
-    WHEN 'Eevee' THEN 15
-    WHEN 'Vaporeon' THEN 16
-    WHEN 'Jolteon' THEN 17
-    WHEN 'Flareon' THEN 18
-    WHEN 'Espeon' THEN 19
-    WHEN 'Umbreon' THEN 20
-    WHEN 'Leafeon' THEN 21
-    WHEN 'Glaceon' THEN 22
-    WHEN 'Sylveon' THEN 23
-    ELSE 1000
-END, id`,
+		 ORDER BY pokedex_number NULLS LAST, id`,
 	)
 
 	if err != nil {
@@ -64,6 +39,7 @@ END, id`,
 
 		err := rows.Scan(
 			&pokemon.ID,
+			&pokemon.PokedexNumber,
 			&pokemon.Nombre,
 			&pokemon.Tipo,
 			&pokemon.Altura,
@@ -87,12 +63,13 @@ func (r *PokemonRepository) GetByID(ctx context.Context, id int) (models.Pokemon
 
 	err := r.DB.QueryRow(
 		ctx,
-		`SELECT id, nombre, tipo, altura, peso, imagen, descripcion
+		`SELECT id, COALESCE(pokedex_number, id), nombre, tipo, altura, peso, imagen, descripcion
 		 FROM pokemons
 		 WHERE id = $1`,
 		id,
 	).Scan(
 		&pokemon.ID,
+		&pokemon.PokedexNumber,
 		&pokemon.Nombre,
 		&pokemon.Tipo,
 		&pokemon.Altura,

@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/static/css/style.css">
+    <script src="/static/js/team.js" defer></script>
     <script type="module" src="https://cdn.jsdelivr.net/gh/starfederation/datastar@main/bundles/datastar.js"></script>
 </head>
 <body>
@@ -39,6 +40,19 @@
                 <strong>{{ len .Pokemons }}</strong>
                 <span>Pokémon en la colección</span>
             </div>
+        </section>
+
+        <section class="team-section" aria-labelledby="team-title">
+            <div class="team-heading">
+                <div>
+                    <span class="section-kicker">PREPARA TU AVENTURA</span>
+                    <h2 id="team-title">Tu equipo Pokémon</h2>
+                    <p>Sortearás seis compañeros distintos de tu colección.</p>
+                </div>
+                <button class="submit-button team-button" id="draw-team" type="button">Sortear mi equipo</button>
+            </div>
+            <p class="team-status" id="team-status" role="status" aria-live="polite">¿Quiénes te acompañarán en la aventura?</p>
+            <div class="team-grid" id="team-results" aria-live="polite" aria-relevant="additions"></div>
         </section>
 
         <section class="add-pokemon-section" aria-labelledby="add-pokemon-title">
@@ -94,8 +108,8 @@
             <div class="collection-layout">
                 <div class="pokemon-grid">
                     {{ range .Pokemons }}
-                    <button class="pokemon-tile" type="button" data-on:click="@get('/pokemon/{{ .ID }}')" aria-label="Ver información de {{ .Nombre }}">
-                        <span class="tile-number">N.º {{ printf "%03d" .ID }}</span>
+                    <button class="pokemon-tile" type="button" data-on:click="@get('/pokemon/{{ .ID }}')" data-pokemon-id="{{ .PokedexNumber }}" data-pokemon-name="{{ .Nombre }}" data-pokemon-type="{{ .Tipo }}" data-pokemon-image="{{ .Imagen }}" aria-label="Ver información de {{ .Nombre }}">
+                        <span class="tile-number">N.º {{ printf "%03d" .PokedexNumber }}</span>
                         <span class="tile-art">
                             {{ if .Imagen }}
                             <img src="{{ .Imagen }}" alt="" loading="lazy">
@@ -144,7 +158,7 @@
         {{ else }}
         <span class="image-placeholder" aria-hidden="true">?</span>
         {{ end }}
-        <span class="detail-number">N.º {{ printf "%03d" .ID }}</span>
+        <span class="detail-number">N.º {{ printf "%03d" .PokedexNumber }}</span>
     </div>
     <div class="detail-copy">
         <span class="section-kicker">FICHA POKÉMON</span>

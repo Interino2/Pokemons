@@ -1,0 +1,28 @@
+name: Validate commits
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [main]
+
+jobs:
+  check-commits:
+    name: check-commits
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Require a major: or feat: commit
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          if git log --format=%s "$BASE..$HEAD" | grep -Eq '^(major|feat):'; then
+            echo "OK: hay un commit major: o feat:"
+          else
+            echo "::error::El PR necesita al menos un commit que empiece con 'major:' o 'feat:'"
+            exit 1
+          fi

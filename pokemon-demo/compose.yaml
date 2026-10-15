@@ -1,16 +1,15 @@
 services:
   db:
-    build:
-      context: .
-      dockerfile: database/dockerfile
+    image: postgres:18-alpine
     environment:
       POSTGRES_USER: ${DB_USER:-postgres}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-admin}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-pokemon-local}
       POSTGRES_DB: ${DB_NAME:-pokemon_db}
     ports:
-      - "5434:5432"
+      - "${DB_HOST_PORT:-5434}:5432"
     volumes:
-      - pokemon_postgres_data:/var/lib/postgresql
+      - pokemon_demo_postgres_data:/var/lib/postgresql
+      - ./init.sql:/docker-entrypoint-initdb.d/001-init.sql:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U \"$${POSTGRES_USER}\" -d \"$${POSTGRES_DB}\""]
       interval: 5s
@@ -20,21 +19,21 @@ services:
 
   app:
     build:
-      context: .
+      context: ..
       dockerfile: dockerfile
     environment:
       DB_HOST: db
       DB_PORT: "5432"
       DB_USER: ${DB_USER:-postgres}
-      DB_PASSWORD: ${DB_PASSWORD:-admin}
+      DB_PASSWORD: ${DB_PASSWORD:-pokemon-local}
       DB_NAME: ${DB_NAME:-pokemon_db}
       APP_PORT: "8080"
     ports:
-      - "8080:8080"
+      - "${APP_HOST_PORT:-8080}:8080"
     depends_on:
       db:
         condition: service_healthy
     restart: unless-stopped
 
 volumes:
-  pokemon_postgres_data:
+  pokemon_demo_postgres_data:

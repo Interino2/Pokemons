@@ -16,3 +16,4 @@ COPY static ./static
 
 EXPOSE 8080
 CMD ["./pokemon-app"]
+# prueba de pipeline

@@ -1,65 +1,28 @@
-name: Docker CI - Build & Push
- 
+name: Validate commits
+
 on:
   pull_request:
-    types: [closed]
-    branches:
-      - main
-    paths:
-      - "**.go"
-      - "go.mod"
-      - "go.sum"
-      - "dockerfile"
-      - "templates/**"
-      - "static/**"
- 
+    types: [opened, synchronize, reopened]
+    branches: [main]
+
 jobs:
-  build-and-push:
-    name: Build & Push Docker Image
+  check-commits:
+    name: check-commits
     runs-on: ubuntu-latest
-    if: github.event.pull_request.merged == true
- 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          ref: ${{ github.event.pull_request.merge_commit_sha }}
- 
-      - name: Calculate semantic version
-        id: version
-        uses: PaulHatch/semantic-version@v6.0.2
-        with:
-          major_pattern: "major:"
-          minor_pattern: "feat:"
-          version_format: "${major}.${minor}.${patch}"
- 
-      - name: Validate calculated version
+
+      - name: Require a major: or feat: commit
         env:
-          NEW_VERSION: ${{ steps.version.outputs.version }}
+          BASE: ${{ github.event.pull_request.base.sha }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
         run: |
-          if [ -z "$NEW_VERSION" ]; then
-            echo "Error: NEW_VERSION salió vacío, abortando antes de construir la imagen."
+          if git log --format=%s "$BASE..$HEAD" | grep -Eq '^(major|feat):'; then
+            echo "OK: hay un commit major: o feat:"
+          else
+            echo "::error::El PR necesita al menos un commit que empiece con 'major:' o 'feat:'"
             exit 1
           fi
-          echo "Versión calculada: $NEW_VERSION"
- 
-      - name: Log in to Docker Hub
-        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USER }}" --password-stdin
- 
-      - name: Build Docker image
-        env:
-          NEW_VERSION: ${{ steps.version.outputs.version }}
-        run: |
-          docker build \
-            -f dockerfile \
-            -t chavhd/prueba_betta:${NEW_VERSION} \
-            -t chavhd/prueba_betta:latest \
-            .
- 
-      - name: Push Docker image tags
-        env:
-          NEW_VERSION: ${{ steps.version.outputs.version }}
-        run: |
-          docker push chavhd/prueba_betta:${NEW_VERSION}
-          docker push chavhd/prueba_betta:latest

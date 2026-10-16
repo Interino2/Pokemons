@@ -21,9 +21,9 @@ func NewPokemonRepository(db *pgxpool.Pool) *PokemonRepository {
 func (r *PokemonRepository) GetAll(ctx context.Context) ([]models.Pokemon, error) {
 	rows, err := r.DB.Query(
 		ctx,
-		`SELECT id, COALESCE(pokedex_number, id), nombre, tipo, altura, peso, imagen, descripcion
+		`SELECT id, COALESCE(pokedex_number, id), nombre, tipo, altura, peso, imagen, descripcion, es_megaevolucion
 		 FROM pokemons
-		 ORDER BY pokedex_number NULLS LAST, id`,
+		 ORDER BY pokedex_number NULLS LAST, es_megaevolucion, id`,
 	)
 
 	if err != nil {
@@ -46,6 +46,7 @@ func (r *PokemonRepository) GetAll(ctx context.Context) ([]models.Pokemon, error
 			&pokemon.Peso,
 			&pokemon.Imagen,
 			&pokemon.Descripcion,
+			&pokemon.EsMegaEvolucion,
 		)
 
 		if err != nil {
@@ -63,7 +64,7 @@ func (r *PokemonRepository) GetByID(ctx context.Context, id int) (models.Pokemon
 
 	err := r.DB.QueryRow(
 		ctx,
-		`SELECT id, COALESCE(pokedex_number, id), nombre, tipo, altura, peso, imagen, descripcion
+		`SELECT id, COALESCE(pokedex_number, id), nombre, tipo, altura, peso, imagen, descripcion, es_megaevolucion
 		 FROM pokemons
 		 WHERE id = $1`,
 		id,
@@ -76,6 +77,7 @@ func (r *PokemonRepository) GetByID(ctx context.Context, id int) (models.Pokemon
 		&pokemon.Peso,
 		&pokemon.Imagen,
 		&pokemon.Descripcion,
+		&pokemon.EsMegaEvolucion,
 	)
 
 	return pokemon, err

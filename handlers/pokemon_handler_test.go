@@ -49,6 +49,7 @@ func TestHomeRendersPokemonCollection(t *testing.T) {
 	handler := newTestHandler(t, &testPokemonStore{
 		pokemons: []models.Pokemon{
 			{ID: 25, PokedexNumber: 25, Nombre: "Pikachu", Tipo: "Eléctrico"},
+			{ID: 10034, PokedexNumber: 6, Nombre: "Mega Charizard X", Tipo: "Fuego / Dragón", EsMegaEvolucion: true},
 		},
 	})
 	response := httptest.NewRecorder()
@@ -59,7 +60,7 @@ func TestHomeRendersPokemonCollection(t *testing.T) {
 		t.Fatalf("status = %d, want 200", response.Code)
 	}
 	body := response.Body.String()
-	for _, want := range []string{"Pikachu", "Eléctrico", "N.º 025", "Pokémon en la colección", "Sortear mi equipo", "seis compañeros distintos"} {
+	for _, want := range []string{"Pikachu", "Eléctrico", "N.º 025", "Mega Charizard X", "N.º 006", "MEGA", "Pokémon en la colección", "Sortear mi equipo", "seis compañeros distintos"} {
 		if !strings.Contains(body, want) {
 			t.Errorf("response body does not contain %q", want)
 		}
@@ -72,11 +73,12 @@ func TestHomeRendersPokemonCollection(t *testing.T) {
 func TestGetPokemonEscapesDatabaseContent(t *testing.T) {
 	handler := newTestHandler(t, &testPokemonStore{
 		pokemon: models.Pokemon{
-			ID:          7,
-			Nombre:      "K'; <script>alert(1)</script>",
-			Tipo:        "Planta",
-			Descripcion: "<img src=x onerror=alert(1)>",
-			Imagen:      "https://example.com/bulbasaur.png",
+			ID:              7,
+			Nombre:          "K'; <script>alert(1)</script>",
+			Tipo:            "Planta",
+			Descripcion:     "<img src=x onerror=alert(1)>",
+			Imagen:          "https://example.com/bulbasaur.png",
+			EsMegaEvolucion: true,
 		},
 	})
 	request := httptest.NewRequest("GET", "/pokemon/7", nil)
@@ -96,6 +98,9 @@ func TestGetPokemonEscapesDatabaseContent(t *testing.T) {
 	}
 	if !strings.Contains(body, `id="pokemon-info"`) {
 		t.Error("response does not contain the Datastar target element")
+	}
+	if !strings.Contains(body, `class="mega-badge detail-mega-badge">MEGA</span>`) {
+		t.Error("response does not identify the mega evolution")
 	}
 }
 

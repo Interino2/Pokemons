@@ -1,0 +1,122 @@
+[
+    {
+        "number": 3,
+        "name": "Mega Venusaur",
+        "type": "Planta / Veneno",
+        "height": 2.4,
+        "weight": 155.5,
+        "image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/10033.png"
+    },
+    {
+        "number": 6,
+        "name": "Mega Charizard X",
+        "type": "Fuego / Dragón",
+        "height": 1.7,
+        "weight": 110.5,
+        "image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/10034.png"
+    },
+    {
+        "number": 6,
+        "name": "Mega Charizard Y",
+        "type": "Fuego / Volador",
+        "height": 1.7,
+        "weight": 100.5,
+        "image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/10035.png"
+    },
+    {
+        "number": 9,
+        "name": "Mega Blastoise",
+        "type": "Agua",
+        "height": 1.6,
+        "weight": 101,
+        "image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/10036.png"
+    },
+    {
+        "number": 15,
+        "name": "Mega Beedrill",
+        "type": "Bicho / Veneno",
+        "height": 1.4,
+        "weight": 40.5,
+        "image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/10086.png"
+    },
+    {
+        "number": 18,
+        "name": "Mega Pidgeot",
+        "type": "Normal / Volador",
+        "height": 2.2,
+        "weight": 50.5,
+        "image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/10073.png"
+    },
+    {
+        "number": 65,
+        "name": "Mega Alakazam",
+        "type": "Psíquico",
+        "height": 1.2,
+        "weight": 48,
+        "image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/10037.png"
+    },
+    {
+        "number": 80,
+        "name": "Mega Slowbro",
+        "type": "Agua / Psíquico",
+        "height": 2,
+        "weight": 120,
+        "image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/10071.png"
+    },
+    {
+        "number": 94,
+        "name": "Mega Gengar",
+        "type": "Fantasma / Veneno",
+        "height": 1.4,
+        "weight": 40.5,
+        "image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/10038.png"
+    },
+    {
+        "number": 115,
+        "name": "Mega Kangaskhan",
+        "type": "Normal",
+        "height": 2.2,
+        "weight": 100,
+        "image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/10039.png"
+    },
+    {
+        "number": 127,
+        "name": "Mega Pinsir",
+        "type": "Bicho / Volador",
+        "height": 1.7,
+        "weight": 59,
+        "image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/10040.png"
+    },
+    {
+        "number": 130,
+        "name": "Mega Gyarados",
+        "type": "Agua / Siniestro",
+        "height": 6.5,
+        "weight": 305,
+        "image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/10041.png"
+    },
+    {
+        "number": 142,
+        "name": "Mega Aerodactyl",
+        "type": "Roca / Volador",
+        "height": 2.1,
+        "weight": 79,
+        "image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/10042.png"
+    },
+    {
+        "number": 150,
+        "name": "Mega Mewtwo X",
+        "type": "Psíquico / Lucha",
+        "height": 2.3,
+        "weight": 127,
+        "image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/10043.png"
+    },
+    {
+        "number": 150,
+        "name": "Mega Mewtwo Y",
+        "type": "Psíquico",
+        "height": 1.5,
+        "weight": 33,
+        "image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/10044.png"
+    }
+]

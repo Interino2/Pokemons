@@ -581,6 +581,26 @@ a {
     font-weight: 600;
 }
 
+.tile-heading {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 5px;
+}
+
+.mega-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 7px;
+    border-radius: 20px;
+    background: #fff0d9;
+    color: #a85c12;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .06em;
+}
+
 .tile-art {
     width: 100%;
     height: 110px;
@@ -712,6 +732,12 @@ a {
     background: rgba(255, 255, 255, .75);
     color: #88899c;
     font-size: 10px;
+}
+
+.detail-mega-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
 }
 
 .detail-copy {

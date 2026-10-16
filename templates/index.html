@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/static/css/style.css?v=20261013-4">
+    <link rel="stylesheet" href="/static/css/style.css?v=20261016-1">
     <script src="/static/js/team.js" defer></script>
     <script type="module" src="https://cdn.jsdelivr.net/gh/starfederation/datastar@main/bundles/datastar.js"></script>
 </head>
@@ -26,7 +26,7 @@
             <div class="hero-copy">
                 <span class="eyebrow"><span class="eyebrow-dot"></span> BIENVENIDO, ENTRENADOR</span>
                 <h1 id="page-title">Descubre tu próximo <span>Pokémon.</span></h1>
-                <p>Explora la colección, conoce sus características y encuentra a tu nuevo compañero de aventura.</p>
+                <p>Explora los Pokémon de Kanto y sus megaevoluciones, conoce sus características y encuentra a tu nuevo compañero de aventura.</p>
                 <a class="hero-link" href="#coleccion">Explorar colección <span aria-hidden="true">↓</span></a>
             </div>
             <div class="hero-art" aria-hidden="true">
@@ -109,7 +109,10 @@
                 <div class="pokemon-grid">
                     {{ range .Pokemons }}
                     <button class="pokemon-tile" type="button" data-on:click="@get('/pokemon/{{ .ID }}')" data-pokemon-id="{{ .PokedexNumber }}" data-pokemon-name="{{ .Nombre }}" data-pokemon-type="{{ .Tipo }}" data-pokemon-image="{{ .Imagen }}" aria-label="Ver información de {{ .Nombre }}">
-                        <span class="tile-number">N.º {{ printf "%03d" .PokedexNumber }}</span>
+                        <span class="tile-heading">
+                            <span class="tile-number">N.º {{ printf "%03d" .PokedexNumber }}</span>
+                            {{ if .EsMegaEvolucion }}<span class="mega-badge">MEGA</span>{{ end }}
+                        </span>
                         <span class="tile-art">
                             {{ if .Imagen }}
                             <img src="{{ .Imagen }}" alt="" loading="lazy">
@@ -159,6 +162,7 @@
         <span class="image-placeholder" aria-hidden="true">?</span>
         {{ end }}
         <span class="detail-number">N.º {{ printf "%03d" .PokedexNumber }}</span>
+        {{ if .EsMegaEvolucion }}<span class="mega-badge detail-mega-badge">MEGA</span>{{ end }}
     </div>
     <div class="detail-copy">
         <span class="section-kicker">FICHA POKÉMON</span>

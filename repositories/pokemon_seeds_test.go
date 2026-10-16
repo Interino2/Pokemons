@@ -30,3 +30,39 @@ func TestLoadGen1Pokemon(t *testing.T) {
 		}
 	}
 }
+
+func TestLoadMegaPokemon(t *testing.T) {
+	pokemons, err := loadMegaPokemon()
+	if err != nil {
+		t.Fatalf("load mega evolutions: %v", err)
+	}
+	if len(pokemons) != 15 {
+		t.Fatalf("got %d mega evolutions, want 15", len(pokemons))
+	}
+
+	names := make(map[string]bool, len(pokemons))
+	for _, pokemon := range pokemons {
+		names[pokemon.Nombre] = true
+	}
+	for _, name := range []string{
+		"Mega Venusaur",
+		"Mega Charizard X",
+		"Mega Charizard Y",
+		"Mega Blastoise",
+		"Mega Beedrill",
+		"Mega Pidgeot",
+		"Mega Alakazam",
+		"Mega Slowbro",
+		"Mega Gengar",
+		"Mega Kangaskhan",
+		"Mega Pinsir",
+		"Mega Gyarados",
+		"Mega Aerodactyl",
+		"Mega Mewtwo X",
+		"Mega Mewtwo Y",
+	} {
+		if !names[name] {
+			t.Errorf("mega evolution %q not found", name)
+		}
+	}
+}
